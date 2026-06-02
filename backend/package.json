@@ -1,0 +1,42 @@
+{
+  "name": "@recipes/backend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "ts-node-dev --rs ./src/index.ts",
+    "build": "rimraf ./dist && tsc --build tsconfig.json",
+    "pgc": "prisma generate",
+    "start": "node ./dist/index.js",
+    "types": "tsc --noEmit --project ./tsconfig.json",
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/lodash": "^4.17.24",
+    "@types/node": "^25.6.0",
+    "rimraf": "^6.1.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "~6.0.2"
+  },
+  "prisma": {
+    "schema": "/src/prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.16.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "loadash": "^1.0.0",
+    "lodash": "^4.18.1",
+    "mysql2": "^3.22.3",
+    "prettier": "^3.8.3",
+    "zod": "^4.3.6"
+  }
+}
