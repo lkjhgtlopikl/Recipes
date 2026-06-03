@@ -7,6 +7,7 @@ import { TextArea } from "../components/TextArea";
 import { Load } from "../components/Load";
 import { Err } from "../components/Err";
 import { id } from "zod/locales";
+import { Img } from "../components/Img";
 export const EditRecipe = () => {
   const { r } = useParams<{ r: string }>();
   const idrecipe = Number(r);
@@ -215,13 +216,11 @@ export const EditRecipe = () => {
                   {formik.values.steps.map((step, index) => (
                     <div className="step" key={index}>
                       <label>Шаг {index + 1}:</label>
-                      <label>Фото (URL):</label>
-                      <input
-                        type="text"
-                        placeholder="Ссылка на фото"
-                        value={formik.values.steps[index].image}
-                        onChange={formik.handleChange}
-                        name={`steps.${index}.image`}
+                      <label>Фото:</label>
+                      <Img
+                        currentUrl={formik.values.steps[index].image}
+                        onUploaded={(url) => formik.setFieldValue(`steps.${index}.image`, url)}
+                        folder="steps"
                       />
                       <label>Описание:</label>
                       <textarea
@@ -269,7 +268,12 @@ export const EditRecipe = () => {
           <Select name="menu_id" label="Меню:*" list={menuOptions} formik={formik} placeholder="Выберите меню" />
         </div>
         <div className="form-row">
-          <Input name="img_url" type="text" label="Ссылка на фото блюда" placeholder="https://..." formik={formik} />
+          <label>Фото блюда:</label>
+          <Img
+            currentUrl={formik.values.img_url}
+            onUploaded={(url) => formik.setFieldValue("img_url", url)}
+            folder="recipes"
+          />
           <Select name="category_id" label="Категория:*" list={categoryOptions} formik={formik} placeholder="Выберите категорию" />
         </div>
         <div className="form-actions">

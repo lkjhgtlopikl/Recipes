@@ -28,7 +28,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
     { id: props.id! },
     { enabled: !!props.id },
   );
-  const rating = dataRatings?.[0]?.mark ?? 0;
+  const rating = dataRatings?.[0]?.mark;
   const handleDelete = async () => {
     if (!window.confirm("Вы уверены, что хотите удалить рецепт?")) return;
 
@@ -55,10 +55,6 @@ export const RecipeCard = (props: RecipeCardProps) => {
           <Meta name={"Время"} value={props.cookingTime} />
           <Meta name={"Порции"} value={props.servings} />
           <Meta name={"Сложность"} value={props.difficulty} />
-          {/*<Meta name={"Калории"} value={calories} />
-                         <Meta name={"Белки"} value={protein} />
-                        <Meta name={"Жиры"} value={fat} />
-                        <Meta name={"Углеводы"} value={carbohydrates} /> */}
         </div>
         <div className="recipe-actions">
           <a href={`/recipes/${props.id}`} className="btn btn-sm">
@@ -77,7 +73,6 @@ export const RecipeCard = (props: RecipeCardProps) => {
 
           {user?.id == props.userId && user ? (
             <button
-              // href={`/recipes/delete/${props.id}`}
               onClick={handleDelete}
               className="btn btn-sm btn-danger"
             >

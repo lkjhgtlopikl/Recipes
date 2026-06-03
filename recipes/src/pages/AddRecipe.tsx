@@ -1,6 +1,7 @@
 import { trpc } from "../lib/trpc";
 import { useEffect } from "react";
-import { useFormik, FieldArray, FormikProvider } from "formik"; // добавлен FieldArray
+import { useFormik, FieldArray, FormikProvider } from "formik";
+import { Img } from "../components/Img";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { TextArea } from "../components/TextArea";
@@ -8,22 +9,21 @@ import { Load } from "../components/Load";
 import { Err } from "../components/Err";
 
 export const AddRecipe = () => {
-  // --- Получение справочников ---
   const {
     data: dataCuisines,
     isLoading: cuisinesLoading,
     error: cuisinesError,
-  } = trpc.getCuisines.useQuery(); // ожидаем [{ id: 1, name: "Итальянская" }, ...]
+  } = trpc.getCuisines.useQuery();
   const {
     data: dataTypes,
     isLoading: typesLoading,
     error: typesError,
-  } = trpc.getTypes.useQuery(); // [{ id, name }]
-  const { data: dataIngredients } = trpc.getAllIngredients.useQuery(); // [{ id, name }]
+  } = trpc.getTypes.useQuery();
+  const { data: dataIngredients } = trpc.getAllIngredients.useQuery();
 
-  const { data: dataCategory } = trpc.getCategory.useQuery(); // [{ id, name }]
-  const { data: dataUnits } = trpc.getUnits.useQuery(); // [{ id, name }]
-  const { data: dataMenu } = trpc.getMenu.useQuery(); // нужно добавить запрос меню
+  const { data: dataCategory } = trpc.getCategory.useQuery();
+  const { data: dataUnits } = trpc.getUnits.useQuery();
+  const { data: dataMenu } = trpc.getMenu.useQuery();
 
   // Мутация добавления рецепта
   const addRecipeMutation = trpc.addRecipe.useMutation();
@@ -36,8 +36,8 @@ export const AddRecipe = () => {
   const formik = useFormik({
     initialValues: {
       title: "",
-      img_url: "", // URL изображения (пока не файл)
-      cuisine_id: "", // будет ID
+      img_url: "",
+      cuisine_id: "",
       typeCooking_id: "",
       category_id: "",
       menu_id: "",
@@ -74,11 +74,9 @@ export const AddRecipe = () => {
       if (!values.servings) errors.servings = "Введите количество порций";
       if (!values.difficulty) errors.difficulty = "Выберите сложность";
       if (!values.description) errors.description = "Введите описание";
-      // можно добавить валидацию ингредиентов и шагов при необходимости
       return errors;
     },
     onSubmit: async (values) => {
-      // Преобразуем строки в числа, где надо
       const payload = {
         title: values.title,
         cookingTime: Number(values.cookingTime),
@@ -122,7 +120,6 @@ export const AddRecipe = () => {
     },
   });
 
-  // Загрузка...
   if (cuisinesLoading || typesLoading) {
     return <Load />;
   }
@@ -160,11 +157,25 @@ export const AddRecipe = () => {
     { value: "5", label: "Очень сложно" },
   ];
 
+  const handleIngredientChange = (index: number, selectedId: string) => {
+    formik.setFieldValue(`ingredients.${index}.ingredient_id`, selectedId);
+
+    const ingredient = ingredientOptions.find(
+      opt => opt.value === selectedId
+    );
+    if (ingredient) {
+      formik.setFieldValue(`ingredients.${index}.calories`, ingredient.calories ?? 0);
+      formik.setFieldValue(`ingredients.${index}.protein`, ingredient.protein ?? 0);
+      formik.setFieldValue(`ingredients.${index}.fat`, ingredient.fat ?? 0);
+      formik.setFieldValue(`ingredients.${index}.carbohydrates`, ingredient.carbohydrates ?? 0);
+    }
+  };
+
   return (
     <div className="container">
       <h1>Добавить новый рецепт</h1>
       <form className="form" onSubmit={formik.handleSubmit}>
-        {/* Название */}
+
         <Input
           name="title"
           type="text"
@@ -173,7 +184,6 @@ export const AddRecipe = () => {
           formik={formik}
         />
 
-        {/* Ингредиенты (FieldArray) */}
         <div className="card p-2 border-secondary">
           <label>Ингредиенты</label>
           <FormikProvider value={formik}>
@@ -234,7 +244,6 @@ export const AddRecipe = () => {
           </FormikProvider>
         </div>
 
-        {/* Описание */}
         <TextArea
           name="description"
           label="Описание:*"
@@ -242,7 +251,6 @@ export const AddRecipe = () => {
           formik={formik}
         />
 
-        {/* Шаги (FieldArray) */}
         <div className="form-group">
           <label>Инструкции приготовления:*</label>
           <FormikProvider value={formik}>
@@ -253,13 +261,11 @@ export const AddRecipe = () => {
                   {formik.values.steps.map((_step, index) => (
                     <div className="step" key={index}>
                       <label>Шаг {index + 1}:</label>
-                      <label>Фото (URL):</label>
-                      <input
-                        type="text"
-                        placeholder="Ссылка на фото"
-                        value={formik.values.steps[index].image}
-                        onChange={formik.handleChange}
-                        name={`steps.${index}.image`}
+                      <label>Фото:</label>
+                      <Img
+                        currentUrl={formik.values.steps[index].image}
+                        onUploaded={(url) => formik.setFieldValue(`steps.${index}.image`, url)}
+                        folder="steps"
                       />
                       <label>Описание:</label>
                       <textarea
@@ -295,7 +301,6 @@ export const AddRecipe = () => {
           </FormikProvider>
         </div>
 
-        {/* Время и порции */}
         <div className="form-row">
           <Input
             name="cookingTime"
@@ -315,7 +320,6 @@ export const AddRecipe = () => {
           />
         </div>
 
-        {/* Категория и кухня */}
         <div className="form-row">
           <Select
             name="difficulty"
@@ -333,7 +337,6 @@ export const AddRecipe = () => {
           />
         </div>
 
-        {/* Тип и меню */}
         <div className="form-row">
           <Select
             name="typeCooking_id"
@@ -351,15 +354,15 @@ export const AddRecipe = () => {
           />
         </div>
 
-        {/* URL изображения */}
         <div className="form-row">
-          <Input
-            name="img_url"
-            type="text"
-            label="Ссылка на фото блюда"
-            placeholder="https://..."
-            formik={formik}
-          />
+          <div className="form-group">
+            <label>Фото блюда:</label>
+            <Img
+              currentUrl={formik.values.img_url}
+              onUploaded={(url) => formik.setFieldValue("img_url", url)}
+              folder="recipes"
+            />
+          </div>
           <Select
             name="category_id"
             label="Категория:*"
@@ -369,7 +372,6 @@ export const AddRecipe = () => {
           />
         </div>
 
-        {/* Кнопки */}
         <div className="form-actions">
           <button
             type="submit"

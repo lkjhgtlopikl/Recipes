@@ -180,6 +180,7 @@ export const getURecepies = publicProcedure
 export const addRecipe = protectedProcedure
   .input(addRecipeInput)
   .mutation(async ({ ctx, input }) => {
+
     const userId = ctx.userId;
     // 1. Вставка в таблицу recipes
     const [result] = await pool.query(
@@ -198,11 +199,10 @@ export const addRecipe = protectedProcedure
         input.calories ?? null,
         input.fat ?? null,
         input.carbohydrates ?? null,
-        input.img_url ?? null,
+        input.img_url ?? 'https://res.cloudinary.com/dayoqjmmv/image/upload/v1780179872/samples/food/fish-vegetables.jpg',
       ],
     );
     const recipeId = (result as any).insertId;
-
     // 2. Вставка ингредиентов
     for (const ing of input.ingredients) {
       await pool.query(

@@ -252,7 +252,7 @@ export const User = () => {
                     servings={recipe.servings}
                     difficulty={recipe.difficulty}
                     description={recipe.description}
-                    userId={recipe.userId}
+                    userId={id}
                   />
                 ))}
               </div>
