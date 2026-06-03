@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02309073-6383-40c0-9573-cb8bd99b47ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/recipes/src/components/Img.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/router/recipes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/router/recipes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/components/RecipeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/components/RecipeCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/components/User.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/components/User.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/load.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/pages/AddRecipe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/pages/AddRecipe.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/src/pages/EditRecipe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/pages/EditRecipe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/src/pages/ListOfRecipes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/pages/ListOfRecipes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/src/pages/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/src/pages/Main.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,49 +19,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/recipes/src/pages/AddRecipe.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3900">
-              <caret line="268" column="24" selection-start-line="263" selection-start-column="22" selection-end-line="268" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/recipes/src/pages/EditRecipe.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="223" column="24" selection-start-line="223" selection-start-column="24" selection-end-line="223" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#63#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/recipes/src/pages/ListOfRecipes.tsx">
+        <entry file="file://$PROJECT_DIR$/backend/src/router/recipes.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="82" column="33" lean-forward="true" selection-start-line="82" selection-start-column="33" selection-end-line="82" selection-end-column="33" />
+            <state relative-caret-position="-88">
+              <caret line="262" column="23" lean-forward="true" selection-start-line="262" selection-start-column="23" selection-end-line="262" selection-end-column="23" />
               <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/recipes/src/components/RecipeCard.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-525">
-              <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
+                <element signature="e#0#68#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -227,12 +181,20 @@
       <workItem from="1780433472838" duration="2935000" />
       <workItem from="1780437503748" duration="1192000" />
       <workItem from="1780490271336" duration="8904000" />
-      <workItem from="1780527243233" duration="287000" />
+      <workItem from="1780527243233" duration="538000" />
     </task>
+    <task id="LOCAL-00001" summary="add cloudfire to project">
+      <created>1780527667858</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1780527667859</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14174000" />
+    <option name="totallyTimeSpent" value="14425000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -245,9 +207,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="39" width="1920" height="1041" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49920762" visible="true" weight="0.1814346" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49920762" visible="true" weight="0.1814346" />
       <window_info id="Structure" order="1" sideWeight="0.50158733" side_tool="true" weight="0.1814346" />
       <window_info id="npm" order="2" sideWeight="0.50158733" side_tool="true" weight="0.1814346" />
       <window_info id="Favorites" order="3" sideWeight="0.5007924" side_tool="true" weight="0.1814346" />
@@ -259,10 +220,10 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32978722" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49841774" weight="0.3287234" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.49841774" visible="true" weight="0.31702128" />
       <window_info anchor="bottom" id="TypeScript" order="9" sideWeight="0.4994726" weight="0.32978722" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.503692" side_tool="true" weight="0.32765958" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49630803" visible="true" weight="0.32553193" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49630803" weight="0.32553193" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -310,6 +271,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add cloudfire to project" />
+    <option name="LAST_COMMIT_MESSAGE" value="add cloudfire to project" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/languageService/eslint/bin/eslint-plugin.js">
@@ -446,42 +411,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/src/router/recipes.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="262" column="23" lean-forward="true" selection-start-line="262" selection-start-column="23" selection-end-line="262" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/recipes/src/pages/AddRecipe.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3900">
-          <caret line="268" column="24" selection-start-line="263" selection-start-column="22" selection-end-line="268" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/recipes/src/pages/EditRecipe.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
           <caret line="223" column="24" selection-start-line="223" selection-start-column="24" selection-end-line="223" selection-end-column="24" />
           <folding>
             <element signature="e#0#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/recipes/src/components/RecipeCard.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-525">
-          <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -498,10 +433,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/recipes/src/pages/ListOfRecipes.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="82" column="33" lean-forward="true" selection-start-line="82" selection-start-column="33" selection-end-line="82" selection-end-column="33" />
+        <state relative-caret-position="90">
+          <caret line="77" column="38" lean-forward="true" selection-start-line="77" selection-start-column="38" selection-end-line="77" selection-end-column="38" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/recipes/src/components/RecipeCard.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-525">
+          <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/recipes/src/pages/AddRecipe.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="268" column="24" selection-start-line="263" selection-start-column="22" selection-end-line="268" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/src/router/recipes.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-88">
+          <caret line="262" column="23" lean-forward="true" selection-start-line="262" selection-start-column="23" selection-end-line="262" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
           </folding>
         </state>
       </provider>
