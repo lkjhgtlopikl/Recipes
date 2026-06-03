@@ -64,7 +64,7 @@ export const ListOfRecipes = (prop) => {
             <div className="recipes-grid">
               {recepies.map(
                 (recipe: {
-                  idrecipe: number;
+                  id: number;
                   image: string;
                   title: string;
                   userId: number;
@@ -78,9 +78,9 @@ export const ListOfRecipes = (prop) => {
                   description: string;
                 }) => (
                   <RecipeCard
-                    key={recipe.idrecipe}
+                    key={recipe.id}
                     userId={recipe.userId}
-                    id={recipe.idrecipe}
+                    id={recipe.id}
                     image={recipe.image}
                     title={recipe.title}
                     author={recipe.author}

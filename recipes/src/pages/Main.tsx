@@ -32,7 +32,7 @@ export const Main = () => {
             <div className="recipes-grid">
               {recepies.map((recipe, i) => (
                 <RecipeCard
-                  id={i}
+                  id={recipe.id}
                   image={recipe.image}
                   title={recipe.title}
                   author={recipe.author}
