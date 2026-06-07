@@ -251,7 +251,7 @@ textarea {
     resize: vertical;
 }
 
-/* ---------- Детали рецепта ---------- */
+/*  Детали рецепта  */
 .recipe-detail {
     background: white;
     padding: 30px;
@@ -278,7 +278,7 @@ textarea {
     border-bottom: 1px solid #eef5ea;
 }
 
-/* ---------- Поиск ---------- */
+/*  Поиск  */
 .search-box {
     margin: 20px 0;
 }
@@ -295,7 +295,7 @@ textarea {
     flex: 1;
 }
 
-/* ---------- Состояние пустого списка ---------- */
+/*  Состояние пустого списка  */
 .empty-state {
     text-align: center;
     padding: 50px 20px;
@@ -306,7 +306,7 @@ textarea {
     box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
-/* ---------- Боковая панель ---------- */
+/*  Боковая панель  */
 .sidebar {
     background: white;
     width: 260px;
@@ -329,7 +329,7 @@ textarea {
     font-weight: 500;
 }
 
-/* ---------- Футер ---------- */
+/*  Футер  */
 .footer {
     background: white;
     width: 100%;
@@ -341,7 +341,7 @@ textarea {
     font-size: 0.9rem;
 }
 
-/* ---------- Строки форм ---------- */
+/*  Строки форм  */
 .form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -373,7 +373,7 @@ textarea {
     flex-wrap: wrap;
 }
 
-/* ---------- Аутентификация ---------- */
+/*  Аутентификация  */
 .auth-form {
     max-width: 420px;
     margin: 0 auto;
@@ -384,7 +384,7 @@ textarea {
     text-align: center;
 }
 
-/* ---------- Управление ---------- */
+/*  Управление  */
 .management-actions {
     margin-bottom: 24px;
     display: flex;
@@ -410,7 +410,7 @@ textarea {
     box-shadow: 0 12px 24px rgba(0,0,0,0.06);
 }
 
-/* ---------- Пользователи ---------- */
+/*  Пользователи  */
 .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -428,7 +428,7 @@ textarea {
     margin-top: 16px;
 }
 
-/* ---------- Профиль ---------- */
+/*  Профиль  */
 .profile-info {
     background: white;
     padding: 24px;
@@ -455,7 +455,7 @@ textarea {
     gap: 12px;
 }
 
-/* ---------- Уведомления ---------- */
+/*  Уведомления  */
 .alert {
     padding: 16px;
     border-radius: 12px;
@@ -472,8 +472,6 @@ textarea {
     border: 1px solid #b8d9b2;
     color: #2e5a2a;
 }
-
-/* ---------- Разное ---------- */
 .btn-link {
     background: none;
     border: none;

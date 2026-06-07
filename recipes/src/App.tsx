@@ -10,9 +10,11 @@ import { AddRecipe } from "./pages/AddRecipe";
 import { ListOfUsers } from "./pages/ListOfUsers";
 import { CookBook } from "./pages/CookBook";
 import { SearchRecipe } from "./pages/SearchRecipe";
+import { AddMenuToUser } from "./pages/AddMenuToUser";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { EditRecipe } from "./pages/EditRecipe.tsx";
+import { Menu } from "./pages/Menu";
 const queryClient = new QueryClient();
 export const App = () => {
   return (
@@ -22,6 +24,9 @@ export const App = () => {
           <AuthProvider>
             <Routes>
               <Route path="/" element={<Main />}>
+                Главная
+              </Route>
+              <Route path="/menu" element={<Menu />}>
                 Главная
               </Route>
               <Route path="/recipes" element={<ListOfRecipes />}>
@@ -48,6 +53,7 @@ export const App = () => {
               <Route path="/users" element={<ListOfUsers />}>
                 Пользователи
               </Route>
+              <Route path="/users/:userId/menu" element={<AddMenuToUser />} />
               <Route path="/users/:userId" element={<User />} />
               <Route path="/users/login" element={<Login />}>
                 Войти

@@ -72,10 +72,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
           )}
 
           {user?.id == props.userId && user ? (
-            <button
-              onClick={handleDelete}
-              className="btn btn-sm btn-danger"
-            >
+            <button onClick={handleDelete} className="btn btn-sm btn-danger">
               Удалить
             </button>
           ) : (

@@ -3,14 +3,7 @@ import { trpc } from "../lib/trpc";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import {
-  type ReactElement,
-  type JSXElementConstructor,
-  type ReactNode,
-  type ReactPortal,
-  useState,
-  useEffect,
-} from "react";
+import { useState, useEffect } from "react";
 import { Ingredient } from "./Ingredient";
 import { Meta } from "./Meta";
 import { useAuth } from "../context/AuthContext";
@@ -193,6 +186,7 @@ export const Recipe = () => {
     difficulty: "",
     description: "",
   };
+  console.log(recipe);
   const steps = dataSteps ?? [
     { id: "", text: "", idRecipe: "", number: "", image: "" },
   ];
@@ -245,6 +239,7 @@ export const Recipe = () => {
               <Meta name={"Время"} value={recipe.cookingTime} />
               <Meta name={"Порции"} value={recipe.servings} />
               <Meta name={"Сложность"} value={recipe.difficulty} />
+              <Meta name={"меню"} value={recipe.menu} />
               <Meta name={"Калории"} value={calories.toFixed(2)} />
               <Meta name={"Белки"} value={protein.toFixed(2)} />
               <Meta name={"Жиры"} value={fat.toFixed(2)} />
@@ -270,67 +265,15 @@ export const Recipe = () => {
             </div>
             <div className="instructions">
               <h3>Инструкции</h3>
-              {steps.map(
-                (step: {
-                  id:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined;
-                  image: string | undefined;
-                  text:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined;
-                }) => (
-                  <>
-                    <h4>Шаг {step.number}</h4>
-                    <div className="recipe-image">
-                      <img src={step.image} />
-                    </div>
-                    <p>{step.text}</p>
-                  </>
-                ),
-              )}
+              {steps.map((step) => (
+                <>
+                  <h4>Шаг {step.number}</h4>
+                  <div className="recipe-image">
+                    <img src={step.image} />
+                  </div>
+                  <p>{step.text}</p>
+                </>
+              ))}
             </div>
             <div className="actions form-row">
               {user?.id == recipe.userId ? (
@@ -380,7 +323,6 @@ export const Recipe = () => {
                       </button>
                     </div>
                   )}
-
                   <div className="form-row">
                     <select
                       value={selectedCookBook}

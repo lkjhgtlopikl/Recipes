@@ -1,5 +1,5 @@
 import z from "zod";
-import { publicProcedure } from "../trpc";
+import { protectedProcedure, publicProcedure } from "../trpc";
 import { pool } from "../db";
 import { TRPCError } from "@trpc/server";
 
@@ -52,4 +52,53 @@ export const getIngredients = publicProcedure
       console.error("Ошибка при получении ингредиентов:", error);
       throw error;
     }
+  });
+
+
+export const getRecomendetIngredients = protectedProcedure.query(
+  async ({ ctx }) => {
+    const userId = ctx.userId;
+    const [Ingredients] = await pool.query(
+      `SELECT DISTINCT i.ingredients_id AS ingredients
+  FROM ingredients_recipes i
+  WHERE i.idrecipe IN (
+    SELECT r.idrecipe
+    FROM ratings r
+    WHERE r.userId = ? AND r.mark >= 4
+  UNION
+   SELECT cb.idrecipe
+    FROM cook_book c
+    LEFT JOIN cook_book_recipes cb    ON c.id = cb.cook_book_id
+    WHERE c.userId = ?)`,
+      [userId, userId]
+    );
+    return Ingredients;
+  });
+export const getJaccardAll = protectedProcedure.input(z.object({ ids: z.array(z.number())})).query(
+  async ({ input }) => {
+    let JC = []
+    for (const i of input.ids){
+      const [All] = await pool.query(
+        `SELECT COUNT(i.ingredients_id) AS ingredients
+  FROM ingredients_recipes i
+  WHERE i.idrecipe = ?`,
+        [i]
+      );
+      JC.push(All)
+
+    };return JC;
+    });
+export const getJaccardUnion = protectedProcedure.input(z.object({ ids: z.array(z.number()), ing:  z.array(z.number())})).query(
+  async ({ input }) => {
+    let JC = []
+    for (const i of input.ids){
+const [Union] = await pool.query(
+        `SELECT COUNT(i.ingredients_id) AS ingredients
+  FROM ingredients_recipes i
+  WHERE i.idrecipe = ? AND ingredients_id IN (?)`,
+        [i, input.ing]
+      );
+      JC.push(Union)
+    }
+    return JC;
   });

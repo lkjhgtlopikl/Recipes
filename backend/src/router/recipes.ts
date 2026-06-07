@@ -15,6 +15,7 @@ export const getRecepies = publicProcedure.query(async () => {
       u.username           AS author,
       cu.name              AS cuisine,
       tc.name              AS typeCooking,
+      m.name              AS menu,
       cat.name             AS category,
       r.cookingTime        AS cookingTime,
       r.servings           AS servings,
@@ -23,11 +24,44 @@ export const getRecepies = publicProcedure.query(async () => {
     FROM recipes r
     LEFT JOIN users u    ON r.userId = u.userId
     LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
+    LEFT JOIN menu m ON r.menu_id = m.menu_id
     LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
     LEFT JOIN category cat ON r.category_id = cat.category_id
   `);
   return rows;
 });
+export const getSomeRecepies = publicProcedure
+  .input(z.object({ ids: z.array(z.number()) }))
+  .query(async ({ input }) => {
+    const [rows] = await pool.query(
+      `
+    SELECT
+      r.idrecipe           AS id,
+      r.img_url            AS image,
+      r.title              AS title,
+      r.userId              AS userId,
+      u.username           AS author,
+      cu.name              AS cuisine,
+      tc.name              AS typeCooking,
+      m.name              AS menu,
+      cat.name             AS category,
+      r.cookingTime        AS cookingTime,
+      r.servings           AS servings,
+      r.difficulty         AS difficulty,
+      r.description        AS description
+    FROM recipes r
+    LEFT JOIN users u    ON r.userId = u.userId
+    LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
+    LEFT JOIN menu m ON r.menu_id = m.menu_id
+    LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
+    LEFT JOIN category cat ON r.category_id = cat.category_id
+    WHERE r.idrecipe IN (?)
+  `,
+      [input.ids],
+    );
+    return rows;
+  });
+
 //Получить рецепты согласно запросу из поиска
 export const getSearchedRecepies = publicProcedure
   .input(searchRecipeInput)
@@ -111,6 +145,7 @@ export const getRecepie = publicProcedure
       u.username           AS author,
       cu.name              AS cuisine,
       tc.name              AS typeCooking,
+      m.name              AS menu,
       cat.name             AS category,
       r.cookingTime        AS cookingTime,
       r.servings           AS servings,
@@ -120,6 +155,7 @@ export const getRecepie = publicProcedure
     LEFT JOIN users u    ON r.userId = u.userId
     LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
     LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
+    LEFT JOIN menu m ON r.menu_id = m.menu_id
     LEFT JOIN category cat ON r.category_id = cat.category_id
     WHERE idrecipe = ?
   `,
@@ -180,7 +216,6 @@ export const getURecepies = publicProcedure
 export const addRecipe = protectedProcedure
   .input(addRecipeInput)
   .mutation(async ({ ctx, input }) => {
-
     const userId = ctx.userId;
     // 1. Вставка в таблицу recipes
     const [result] = await pool.query(
@@ -199,7 +234,8 @@ export const addRecipe = protectedProcedure
         input.calories ?? null,
         input.fat ?? null,
         input.carbohydrates ?? null,
-        input.img_url ?? 'https://res.cloudinary.com/dayoqjmmv/image/upload/v1780179872/samples/food/fish-vegetables.jpg',
+        input.img_url ??
+          "https://res.cloudinary.com/dayoqjmmv/image/upload/v1780179872/samples/food/fish-vegetables.jpg",
       ],
     );
     const recipeId = (result as any).insertId;
@@ -249,12 +285,12 @@ export const delRecipe = protectedProcedure
     return { success: true };
   });
 
-  //изменение рецепта
+//изменение рецепта
 export const updateRecipe = publicProcedure
   .input(editRecipeInput)
   .mutation(async ({ ctx, input }) => {
     const userId = ctx.userId;
-    // 1. Вставка в таблицу recipes
+    // Вставка в таблицу recipes
     const [result] = await pool.query(
       `UPDATE recipes SET 
       title = ?, 
@@ -288,19 +324,19 @@ export const updateRecipe = publicProcedure
         input.fat ?? null,
         input.carbohydrates ?? null,
         input.img_url ?? null,
-        input.idrecipe
+        input.idrecipe,
       ],
     );
     const recipeId = (result as any).insertId;
 
-    // 2. Вставка ингредиентов
+    // Вставка ингредиентов
     for (const ing of input.ingredients) {
       await pool.query(
         `UPDATE ingredients_recipes SET   ingredients_id = ?, quantity = ?, units = ? WHERE id = ? AND idrecipe = ?`,
-        [ing.ingredient_id, ing.quantity, ing.unit,ing.id, input.idrecipe],
+        [ing.ingredient_id, ing.quantity, ing.unit, ing.id, input.idrecipe],
       );
     }
-    // 3. Вставка шагов
+    // Вставка шагов
     for (let index = 0; index < input.steps.length; index++) {
       await pool.query(
         `UPDATE steps SET text = ?, step_number = ?, img_url = ? WHERE id = ? AND idrecipe = ?`,
@@ -309,11 +345,86 @@ export const updateRecipe = publicProcedure
           index + 1,
           input.steps[index].image ?? null,
           input.steps[index].id,
-          input.idrecipe
+          input.idrecipe,
         ],
       );
     }
 
     return { success: true, recipeId };
   });
-  
+
+export const getPopularRecipes = publicProcedure.query(async () => {
+  const [goodRecipes] = await pool.query(`
+    SELECT r.idrecipe as recipes
+FROM recipes r
+JOIN ratings rt ON r.idrecipe = rt.idrecipe
+GROUP BY r.idrecipe
+HAVING AVG(rt.mark) >= 4
+ORDER BY AVG(rt.mark) DESC`);
+  return goodRecipes;
+});
+
+export const getRecomendetMeta = protectedProcedure.query(async ({ ctx }) => {
+  const userId = ctx.userId;
+  const [likedMeta] = await pool.query(
+    `SELECT r.idrecipe, rc.category_id, rc.cuisine_id, rc.menu_id, rc.typeCooking_id
+    FROM ratings r
+    LEFT JOIN recipes rc    ON r.idrecipe = rc.idrecipe
+    WHERE r.userId = ? AND r.mark >= 4
+  `,
+    [userId],
+  );
+  return likedMeta;
+});
+
+export const getKnownRecipes = protectedProcedure.query(async ({ ctx }) => {
+  const userId = ctx.userId;
+  const [recipes] = await pool.query(
+    `SELECT r.idrecipe
+    FROM ratings r
+    WHERE r.userId = ? AND r.mark >= 4
+    UNION
+    SELECT cb.idrecipe
+    FROM cook_book c
+    JOIN cook_book_recipes cb ON c.id = cb.cook_book_id
+    WHERE c.userId = ?
+    UNION
+    SELECT r.idrecipe
+    FROM recipes r
+    WHERE r.userId = ? 
+    `,
+    [userId, userId, userId],
+  );
+  return recipes;
+});
+
+export const getRecomendetByMeta = protectedProcedure
+  .input(
+    z.object({
+      recipes: z.array(z.number()),
+      category: z.array(z.number()),
+      cuisine: z.array(z.number()),
+      menu: z.array(z.number()),
+      typeCooking: z.array(z.number()),
+    }),
+  )
+  .query(async ({ input }) => {
+    const [likedMeta] = await pool.query(
+      `SELECT r.idrecipe
+    FROM recipes r
+    WHERE r.idrecipe NOT IN (?)
+    AND    r.category_id IN (?)
+    AND r.cuisine_id IN (?)
+    AND r.menu_id IN (?)
+    AND r.typeCooking_id IN (?)
+  `,
+      [
+        input.recipes,
+        input.category,
+        input.cuisine,
+        input.menu,
+        input.typeCooking,
+      ],
+    );
+    return likedMeta;
+  });

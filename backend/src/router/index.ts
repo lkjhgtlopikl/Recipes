@@ -11,21 +11,39 @@ import {
   getCookBooks,
 } from "./cookBook";
 import { getCuisines } from "./cuisines";
-import { getAllIngredients, getIngredients, getUnits } from "./ingredients";
+import {
+  getAllIngredients,
+  getIngredients,
+  getJaccardAll,
+  getJaccardUnion,
+  getRecomendetIngredients,
+  getUnits,
+} from "./ingredients";
 import { getMenu } from "./menu";
 import { addRating, delRating, getRatings } from "./rating";
 import {
   addRecipe,
   delRecipe,
+  getKnownRecipes,
   getRecepie,
   getRecepies,
+  getRecomendetByMeta,
+  getRecomendetMeta,
   getSearchedRecepies,
+  getSomeRecepies,
   getURecepies,
   updateRecipe,
 } from "./recipes";
 import { getSteps } from "./steps";
 import { getTypes } from "./types";
-import { delUser, getSearchedUsers, getUser, getUsers } from "./user";
+import {
+  addMenuToUser,
+  delUser,
+  getMenuToUser,
+  getSearchedUsers,
+  getUser,
+  getUsers,
+} from "./user";
 
 export const trpcRouter = trpc.router({
   //Получение из бд
@@ -49,12 +67,21 @@ export const trpcRouter = trpc.router({
   getMenu: getMenu,
   getComments: getComments,
   getRatings: getRatings,
+  getMenuToUser: getMenuToUser,
+  getRecomendetIngredients: getRecomendetIngredients,
+  getRecomendetMeta: getRecomendetMeta,
+  getSomeRecepies: getSomeRecepies,
+  getRecomendetByMeta: getRecomendetByMeta,
+  getKnownRecipes: getKnownRecipes,
+  getJaccardAll: getJaccardAll,
+  getJaccardUnion: getJaccardUnion,
   //добавоение в бд
   addRecipe: addRecipe,
   addCookBook: addCookBook,
   addComment: addComment,
   addRating: addRating,
   addRecipeToCookBook: addRecipeToCookBook,
+  addMenuToUser: addMenuToUser,
   //удаление из бд
   delRecipe: delRecipe,
   delUser: delUser,
@@ -62,7 +89,7 @@ export const trpcRouter = trpc.router({
   delComment: delComment,
   delRating: delRating,
   delRecipeToCookBook: delRecipeToCookBook,
-  //обновление 
-  updateRecipe:updateRecipe,
+  //обновление
+  updateRecipe: updateRecipe,
 });
 export type TrpcRouter = typeof trpcRouter;

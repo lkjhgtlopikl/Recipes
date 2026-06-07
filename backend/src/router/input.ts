@@ -46,7 +46,7 @@ export const addRecipeInput = z.object({
   ),
 });
 export const editRecipeInput = z.object({
-  idrecipe:z.number(),
+  idrecipe: z.number(),
   title: z.string(),
   cookingTime: z.number(),
   servings: z.number(),
@@ -62,7 +62,7 @@ export const editRecipeInput = z.object({
   img_url: z.string().nullable().optional(),
   ingredients: z.array(
     z.object({
-      id:z.number(),
+      id: z.number(),
       ingredient_id: z.number(),
       quantity: z.number(),
       unit: z.string(),
@@ -70,7 +70,7 @@ export const editRecipeInput = z.object({
   ),
   steps: z.array(
     z.object({
-      id:z.number(),
+      id: z.number(),
       image: z.string().nullable().optional(),
       description: z.string(),
     }),

@@ -161,13 +161,22 @@ export const AddRecipe = () => {
     formik.setFieldValue(`ingredients.${index}.ingredient_id`, selectedId);
 
     const ingredient = ingredientOptions.find(
-      opt => opt.value === selectedId
+      (opt) => opt.value === selectedId,
     );
     if (ingredient) {
-      formik.setFieldValue(`ingredients.${index}.calories`, ingredient.calories ?? 0);
-      formik.setFieldValue(`ingredients.${index}.protein`, ingredient.protein ?? 0);
+      formik.setFieldValue(
+        `ingredients.${index}.calories`,
+        ingredient.calories ?? 0,
+      );
+      formik.setFieldValue(
+        `ingredients.${index}.protein`,
+        ingredient.protein ?? 0,
+      );
       formik.setFieldValue(`ingredients.${index}.fat`, ingredient.fat ?? 0);
-      formik.setFieldValue(`ingredients.${index}.carbohydrates`, ingredient.carbohydrates ?? 0);
+      formik.setFieldValue(
+        `ingredients.${index}.carbohydrates`,
+        ingredient.carbohydrates ?? 0,
+      );
     }
   };
 
@@ -175,7 +184,6 @@ export const AddRecipe = () => {
     <div className="container">
       <h1>Добавить новый рецепт</h1>
       <form className="form" onSubmit={formik.handleSubmit}>
-
         <Input
           name="title"
           type="text"
@@ -264,7 +272,9 @@ export const AddRecipe = () => {
                       <label>Фото:</label>
                       <Img
                         currentUrl={formik.values.steps[index].image}
-                        onUploaded={(url) => formik.setFieldValue(`steps.${index}.image`, url)}
+                        onUploaded={(url) =>
+                          formik.setFieldValue(`steps.${index}.image`, url)
+                        }
                         folder="steps"
                       />
                       <label>Описание:</label>
@@ -345,13 +355,19 @@ export const AddRecipe = () => {
             formik={formik}
             placeholder="Выберите тип"
           />
-          <Select
-            name="menu_id"
-            label="Меню:*"
-            list={menuOptions}
-            formik={formik}
-            placeholder="Выберите меню"
-          />
+          <div>
+            <Select
+              name="menu_id"
+              label="Меню:*"
+              list={menuOptions}
+              formik={formik}
+              placeholder="Выберите меню"
+            />
+            <div>
+              {" "}
+              <a href="/menu"> Что за столы такие?</a>
+            </div>
+          </div>
         </div>
 
         <div className="form-row">
