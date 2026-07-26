@@ -1,31 +1,11 @@
-import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { trpc } from "../lib/trpc";
 import { useFormik } from "formik";
-import type { title } from "process";
 export const Header = () => {
   const { user, isLoading, logout } = useAuth();
   const handleLogout = () => {
     logout();
     window.location.reload();
   };
-
-  const utils = trpc.useContext();
-
-  // const formik = useFormik({
-  //   initialValues: {
-  //     title: "",
-  //   },
-  //   validate: (values) => {
-  //     const errors: Record<string, string> = {};
-  //     if (!values.title) errors.title = "Введите название кулинарной книги";
-  //     return errors;
-  //   },
-  //   onSubmit: async (values) => {
-  //     window.location.href = `/search?q=${encodeURIComponent(values.title)}`;
-  //   },
-  // });
-
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -37,7 +17,6 @@ export const Header = () => {
       window.location.href = `/recipes?${params.toString()}`;
     },
   });
-
   if (isLoading) {
     return <>Loading...</>;
   } else {
@@ -45,12 +24,18 @@ export const Header = () => {
       <header>
         <nav className="navbar">
           <div className="nav-brand">
-            <a href="/" className="nav-brand-a">
+            <a href="/" className="nav-brand-a btn">
               Кулинарная книга
+            </a>
+            <a href="/recipes" className="nav-brand-a">
+              Рецепты
+            </a>
+            <a href="/users" className="nav-brand-a">
+              Пользователи
             </a>
           </div>
           <div className="d-flex">
-            <form onSubmit={formik.handleSubmit} className="d-flex">
+            <form onSubmit={formik.handleSubmit} className="d-flex form">
               <input
                 className="form-control me-2"
                 type="text"

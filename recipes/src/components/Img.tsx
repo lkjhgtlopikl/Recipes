@@ -24,7 +24,7 @@ export function Img({ currentUrl, onUploaded, folder = "recipes" }: ImgProps) {
         body: formData,
       });
       const data = await res.json();
-      onUploaded(data.url); // <-- передаём URL в форму
+      onUploaded(data.url);
     } catch (err) {
       console.error("Ошибка загрузки:", err);
       alert("Не удалось загрузить изображение");

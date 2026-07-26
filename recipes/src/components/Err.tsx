@@ -1,9 +1,7 @@
-// components/ErrorPage.tsx
 interface ErrorPageProps {
   message?: string;
   onRetry?: () => void;
 }
-
 export const Err = ({
   message = "Что-то пошло не так. Попробуйте обновить страницу.",
   onRetry,
@@ -35,7 +33,6 @@ export const Err = ({
     </div>
   </div>
 );
-
 const styles = {
   wrapper: {
     textAlign: "center" as const,

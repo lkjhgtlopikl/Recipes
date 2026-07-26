@@ -1,9 +1,8 @@
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
 import { trpc } from "../lib/trpc";
 import { RecipeCard } from "./RecipeCard";
 import { useParams } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -24,6 +23,10 @@ export const User = () => {
 
   const { data: dataCookBooks } = trpc.getCookBooks.useQuery(
     { id },
+    { enabled: !!id },
+  );
+  const { data: dataMenu } = trpc.getMenuToUser.useQuery(
+    { userId: id },
     { enabled: !!id },
   );
 
@@ -115,12 +118,13 @@ export const User = () => {
   const user = dataUser?.[0] ?? { id: 0, username: "", email: "" };
   const userRecipes = recipes ?? [];
   const cookBooks = dataCookBooks ?? [];
+  const menu = dataMenu[0] ?? [];
+  console.log(userRecipes);
 
   return (
     <>
       <Header />
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Sidebar />
+      <div>
         <div className="container" style={{ flex: 1 }}>
           <div className="profile">
             <h1>
@@ -131,154 +135,163 @@ export const User = () => {
                 <strong>Email:</strong> <span>{user.email}</span>
               </div>
               <div className="info-item">
-                <strong>Количество рецептов:</strong>{" "}
-                <span>{userRecipes.length}</span>
+                <strong>Диетические столы:</strong>{" "}
+                {menu.menu?.map((m) => (
+                  <span> {m} </span>
+                ))}
+                , <a href="/menu"> Что за столы такие?</a>
               </div>
-              <div className="accordion" id="accordionExample">
-                <div className="accordion-item">
-                  <h2 className="accordion-header">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne"
-                      aria-expanded="true"
-                      aria-controls="collapseOne"
-                    >
-                      <strong>Кулинарные книги:</strong>{" "}
-                      <span>{cookBooks.length}</span>
-                    </button>
-                  </h2>
-                  <div
-                    id="collapseOne"
-                    className="accordion-collapse collapse show"
-                    data-bs-parent="#accordionExample"
+              {currentUser?.id === id && (
+                <a href={`/users/${userId}/menu`}>
+                  Указать заболевания для опрелеления подходящих солов
+                </a>
+              )}
+            </div>
+            <div className="info-item">
+              <strong>Количество рецептов:</strong>{" "}
+              <span>{userRecipes.length}</span>
+            </div>
+            <div className="accordion" id="accordionExample">
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
                   >
-                    {cookBooks.length === 0 ? (
-                      <>
-                        {!addBook ? (
-                          <div className="empty-state">
-                            <p>У пользователя пока нет кулинарных книг.</p>
-                          </div>
-                        ) : (
-                          <></>
-                        )}
-                      </>
-                    ) : (
-                      <div className="accordion-body">
-                        {cookBooks.map((book: any) => (
-                          <div className="form-row-ingredient-search ">
-                            <a
-                              key={book.id}
-                              className="info-item"
-                              href={`/users/${userId}/cookbook/${book.id}`}
+                    <strong>Кулинарные книги:</strong>{" "}
+                    <span>{cookBooks.length}</span>
+                  </button>
+                </h2>
+                <div
+                  id="collapseOne"
+                  className="accordion-collapse collapse show"
+                  data-bs-parent="#accordionExample"
+                >
+                  {cookBooks.length === 0 ? (
+                    <>
+                      {!addBook ? (
+                        <div className="empty-state">
+                          <p>У пользователя пока нет кулинарных книг.</p>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  ) : (
+                    <div className="accordion-body">
+                      {cookBooks.map((book: any) => (
+                        <div className="form-row-ingredient-search ">
+                          <a
+                            key={book.id}
+                            className="info-item"
+                            href={`/users/${userId}/cookbook/${book.id}`}
+                          >
+                            <strong>{book.title}</strong>{" "}
+                            <span>
+                              {book.recipe[0] == null ? 0 : book.recipe.length}
+                            </span>
+                          </a>
+                          {currentUser?.id === id && (
+                            <button
+                              onClick={() => handleDeleteCookBook(book.id)}
+                              className="btn btn-sm btn-danger"
                             >
-                              <strong>{book.title}</strong>{" "}
-                              <span>
-                                {book.recipe[0] == null
-                                  ? 0
-                                  : book.recipe.length}
-                              </span>
-                            </a>
-                            {currentUser?.id === id && (
-                              <button
-                                onClick={() => handleDeleteCookBook(book.id)}
-                                className="btn btn-sm btn-danger"
-                              >
-                                ✕
-                              </button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {addBook ? (
-                      <form onSubmit={formik.handleSubmit}>
-                        <Input
-                          name="title"
-                          type="text"
-                          label=""
-                          placeholder="Введите название кулинарной книги"
-                          formik={formik}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-danger-ingredient"
-                          onClick={() => setState(false)}
-                        >
-                          ✕
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={
-                            formik.isSubmitting || addCookBookMutation.isPending
-                          }
-                          className="btn btn-primary"
-                        >
-                          Добавить
-                        </button>
-                      </form>
-                    ) : (
-                      <></>
-                    )}
-                    {currentUser?.id === id && (
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {addBook ? (
+                    <form onSubmit={formik.handleSubmit}>
+                      <Input
+                        name="title"
+                        type="text"
+                        label=""
+                        placeholder="Введите название кулинарной книги"
+                        formik={formik}
+                      />
                       <button
-                        onClick={() => setState(true)}
-                        className="btn btn-sm btn-success"
+                        type="button"
+                        className="btn btn-danger-ingredient"
+                        onClick={() => setState(false)}
                       >
-                        Добавить кулинаркную книгу
+                        ✕
                       </button>
-                    )}
-                  </div>
+                      <button
+                        type="submit"
+                        disabled={
+                          formik.isSubmitting || addCookBookMutation.isPending
+                        }
+                        className="btn btn-primary"
+                      >
+                        Добавить
+                      </button>
+                    </form>
+                  ) : (
+                    <></>
+                  )}
+                  {currentUser?.id === id && (
+                    <button
+                      onClick={() => setState(true)}
+                      className="btn btn-sm btn-success"
+                    >
+                      Добавить кулинаркную книгу
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Рецепты пользователя */}
-            <div className="user-recipes">
-              <h2>Рецепты пользователя</h2>
-              <div className="recipes-grid">
-                {userRecipes.map((recipe: any) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    id={recipe.id}
-                    image={recipe.image}
-                    title={recipe.title}
-                    author={recipe.author}
-                    cuisine={recipe.cuisine}
-                    typeCooking={recipe.typeCooking}
-                    category={recipe.category}
-                    cookingTime={recipe.cookingTime}
-                    servings={recipe.servings}
-                    difficulty={recipe.difficulty}
-                    description={recipe.description}
-                    userId={id}
-                  />
-                ))}
-              </div>
+          {/* Рецепты пользователя */}
+          <div className="user-recipes">
+            <h2>Рецепты пользователя</h2>
+            <div className="recipes-grid">
+              {userRecipes.map((recipe: any) => (
+                <RecipeCard
+                  key={recipe.idrecipe}
+                  id={recipe.idrecipe}
+                  img_url={recipe.img_url}
+                  title={recipe.title}
+                  author={recipe.author}
+                  cuisine={recipe.cuisine}
+                  typeCooking={recipe.typeCooking}
+                  category={recipe.category}
+                  cookingTime={recipe.cookingTime}
+                  servings={recipe.servings}
+                  difficulty={recipe.difficulty}
+                  description={recipe.description}
+                  userId={id}
+                />
+              ))}
             </div>
+          </div>
 
-            <div className="profile-actions">
-              <a href="/users" className="btn btn-outline">
-                К списку пользователей
-              </a>
-              <a href="/recipes" className="btn btn-outline">
-                К рецептам
-              </a>
-              {currentUser?.id === id && (
-                <button
-                  onClick={handleDeleteUser}
-                  className="btn btn-sm btn-danger"
-                >
-                  {delUserMutation.isLoading
-                    ? "Удаление..."
-                    : "Удалить профиль"}
-                </button>
-              )}
-            </div>
+          <div className="profile-actions">
+            <a href="/users" className="btn btn-outline">
+              К списку пользователей
+            </a>
+            <a href="/recipes" className="btn btn-outline">
+              К рецептам
+            </a>
+            {currentUser?.id === id && (
+              <button
+                onClick={handleDeleteUser}
+                className="btn btn-sm btn-danger"
+              >
+                {delUserMutation.isLoading ? "Удаление..." : "Удалить профиль"}
+              </button>
+            )}
           </div>
         </div>
       </div>
+      {/*</div>*/}
       <Footer />
     </>
   );

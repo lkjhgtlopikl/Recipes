@@ -23,22 +23,7 @@ export const getIngredients = publicProcedure
   .query(async ({ input }) => {
     try {
       const [rows] = await pool.query(
-        `
-    SELECT
-      i.id                AS id,
-      i.idrecipe          AS recipe,
-      i.ingredients_id    AS ingredient_id,
-      ing.name              AS name,
-      ing.calories              AS calories,
-      ing.protein              AS protein,
-      ing.fat              AS fat,
-      ing.carbohydrates              AS carbohydrates,
-      i.quantity       AS quantity,
-      i.units           AS units
-    FROM ingredients_recipes i
-    LEFT JOIN ingredients ing    ON i.ingredients_id = ing.ingredients_id
-    WHERE idrecipe = ?
-  `,
+        `SELECT * FROM full_ingredient WHERE recipe = ?`,
         input.id,
       );
       if (!rows) {
@@ -53,7 +38,6 @@ export const getIngredients = publicProcedure
       throw error;
     }
   });
-
 
 export const getRecomendetIngredients = protectedProcedure.query(
   async ({ ctx }) => {
@@ -70,35 +54,38 @@ export const getRecomendetIngredients = protectedProcedure.query(
     FROM cook_book c
     LEFT JOIN cook_book_recipes cb    ON c.id = cb.cook_book_id
     WHERE c.userId = ?)`,
-      [userId, userId]
+      [userId, userId],
     );
     return Ingredients;
-  });
-export const getJaccardAll = protectedProcedure.input(z.object({ ids: z.array(z.number())})).query(
-  async ({ input }) => {
-    let JC = []
-    for (const i of input.ids){
+  },
+);
+export const getJaccardAll = protectedProcedure
+  .input(z.object({ ids: z.array(z.number()) }))
+  .query(async ({ input }) => {
+    let JC = [];
+    for (const i of input.ids) {
       const [All] = await pool.query(
         `SELECT COUNT(i.ingredients_id) AS ingredients
   FROM ingredients_recipes i
   WHERE i.idrecipe = ?`,
-        [i]
+        [i],
       );
-      JC.push(All)
-
-    };return JC;
-    });
-export const getJaccardUnion = protectedProcedure.input(z.object({ ids: z.array(z.number()), ing:  z.array(z.number())})).query(
-  async ({ input }) => {
-    let JC = []
-    for (const i of input.ids){
-const [Union] = await pool.query(
+      JC.push(All);
+    }
+    return JC;
+  });
+export const getJaccardUnion = protectedProcedure
+  .input(z.object({ ids: z.array(z.number()), ing: z.array(z.number()) }))
+  .query(async ({ input }) => {
+    let JC = [];
+    for (const i of input.ids) {
+      const [Union] = await pool.query(
         `SELECT COUNT(i.ingredients_id) AS ingredients
   FROM ingredients_recipes i
   WHERE i.idrecipe = ? AND ingredients_id IN (?)`,
-        [i, input.ing]
+        [i, input.ing],
       );
-      JC.push(Union)
+      JC.push(Union);
     }
     return JC;
   });

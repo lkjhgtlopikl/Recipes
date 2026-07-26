@@ -10,9 +10,7 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => {
     try {
       const payload = verifyToken(token);
       userId = payload.userId;
-    } catch {
-      /* токен недействителен */
-    }
+    } catch {}
   }
   return { userId, req, res };
 };

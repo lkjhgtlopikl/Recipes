@@ -6,7 +6,6 @@ import { Select } from "../components/Select";
 import { TextArea } from "../components/TextArea";
 import { Load } from "../components/Load";
 import { Err } from "../components/Err";
-import { id } from "zod/locales";
 import { Img } from "../components/Img";
 export const EditRecipe = () => {
   const { r } = useParams<{ r: string }>();
@@ -144,7 +143,6 @@ export const EditRecipe = () => {
         })),
       };
       try {
-        console.log(payload);
         await updateRecipeMutation.mutateAsync(payload);
       } catch (error) {
         console.error("Ошибка обновления рецепта:", error);

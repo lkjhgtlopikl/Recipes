@@ -6,57 +6,14 @@ import { addRecipeInput, editRecipeInput, searchRecipeInput } from "./input";
 
 //Получить все рецепты на платформе
 export const getRecepies = publicProcedure.query(async () => {
-  const [rows] = await pool.query(`
-    SELECT
-      r.idrecipe           AS id,
-      r.img_url            AS image,
-      r.title              AS title,
-      r.userId              AS userId,
-      u.username           AS author,
-      cu.name              AS cuisine,
-      tc.name              AS typeCooking,
-      m.name              AS menu,
-      cat.name             AS category,
-      r.cookingTime        AS cookingTime,
-      r.servings           AS servings,
-      r.difficulty         AS difficulty,
-      r.description        AS description
-    FROM recipes r
-    LEFT JOIN users u    ON r.userId = u.userId
-    LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
-    LEFT JOIN menu m ON r.menu_id = m.menu_id
-    LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
-    LEFT JOIN category cat ON r.category_id = cat.category_id
-  `);
+  const [rows] = await pool.query(`SELECT * FROM view_recipes_full`);
   return rows;
 });
 export const getSomeRecepies = publicProcedure
   .input(z.object({ ids: z.array(z.number()) }))
   .query(async ({ input }) => {
     const [rows] = await pool.query(
-      `
-    SELECT
-      r.idrecipe           AS id,
-      r.img_url            AS image,
-      r.title              AS title,
-      r.userId              AS userId,
-      u.username           AS author,
-      cu.name              AS cuisine,
-      tc.name              AS typeCooking,
-      m.name              AS menu,
-      cat.name             AS category,
-      r.cookingTime        AS cookingTime,
-      r.servings           AS servings,
-      r.difficulty         AS difficulty,
-      r.description        AS description
-    FROM recipes r
-    LEFT JOIN users u    ON r.userId = u.userId
-    LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
-    LEFT JOIN menu m ON r.menu_id = m.menu_id
-    LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
-    LEFT JOIN category cat ON r.category_id = cat.category_id
-    WHERE r.idrecipe IN (?)
-  `,
+      `SELECT * FROM view_recipes_full WHERE idrecipe IN (?)`,
       [input.ids],
     );
     return rows;
@@ -136,28 +93,7 @@ export const getRecepie = publicProcedure
   .query(async ({ input }) => {
     try {
       const [row] = await pool.query(
-        `
-    SELECT
-      r.idrecipe           AS id,
-      r.img_url            AS image,
-      r.title              AS title,
-      r.userId             AS userId,
-      u.username           AS author,
-      cu.name              AS cuisine,
-      tc.name              AS typeCooking,
-      m.name              AS menu,
-      cat.name             AS category,
-      r.cookingTime        AS cookingTime,
-      r.servings           AS servings,
-      r.difficulty         AS difficulty,
-      r.description        AS description
-    FROM recipes r
-    LEFT JOIN users u    ON r.userId = u.userId
-    LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
-    LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
-    LEFT JOIN menu m ON r.menu_id = m.menu_id
-    LEFT JOIN category cat ON r.category_id = cat.category_id
-    WHERE idrecipe = ?
+        `SELECT * FROM view_recipes_full WHERE idrecipe = ?
   `,
         input.id,
       );
@@ -177,26 +113,7 @@ export const getURecepies = publicProcedure
   .query(async ({ input }) => {
     try {
       const [row] = await pool.query(
-        `
-    SELECT
-      r.idrecipe           AS id,
-      r.img_url            AS image,
-      r.title              AS title,
-      u.username           AS author,
-      cu.name              AS cuisine,
-      tc.name              AS typeCooking,
-      cat.name             AS category,
-      r.cookingTime        AS cookingTime,
-      r.servings           AS servings,
-      r.difficulty         AS difficulty,
-      r.description        AS description
-    FROM recipes r
-    LEFT JOIN users u    ON r.userId = u.userId
-    LEFT JOIN cuisine cu ON r.cuisine_id = cu.cuisine_id
-    LEFT JOIN typeCooking tc ON r.typeCooking_id = tc.typeCooking_id
-    LEFT JOIN category cat ON r.category_id = cat.category_id
-    WHERE u.userId = ?
-  `,
+        `SELECT * FROM view_recipes_full WHERE userId = ?`,
         input.id,
       );
       if (!row) {
@@ -355,50 +272,56 @@ export const updateRecipe = publicProcedure
 
 export const getPopularRecipes = publicProcedure.query(async () => {
   const [goodRecipes] = await pool.query(`
-    SELECT r.idrecipe as recipes
-FROM recipes r
-JOIN ratings rt ON r.idrecipe = rt.idrecipe
-GROUP BY r.idrecipe
-HAVING AVG(rt.mark) >= 4
-ORDER BY AVG(rt.mark) DESC`);
+    SELECT * FROM popular`);
   return goodRecipes;
 });
 
 export const getRecomendetMeta = protectedProcedure.query(async ({ ctx }) => {
   const userId = ctx.userId;
   const [likedMeta] = await pool.query(
-    `SELECT r.idrecipe, rc.category_id, rc.cuisine_id, rc.menu_id, rc.typeCooking_id
+    `SELECT r.idrecipe, rc.category_id, rc.cuisine_id, rc.typeCooking_id
     FROM ratings r
     LEFT JOIN recipes rc    ON r.idrecipe = rc.idrecipe
     WHERE r.userId = ? AND r.mark >= 4
+    UNION
+    SELECT cb.idrecipe, r.category_id, r.cuisine_id, r.typeCooking_id
+    FROM cook_book c
+    INNER JOIN cook_book_recipes cb ON c.id = cb.cook_book_id
+    LEFT JOIN recipes r    ON cb.idrecipe = r.idrecipe
+    WHERE c.userId = ?
+    UNION
+    SELECT r.idrecipe, r.category_id, r.cuisine_id, r.typeCooking_id
+    FROM recipes r
+    WHERE r.userId = ?
   `,
-    [userId],
+    [userId, userId, userId],
   );
   return likedMeta;
 });
 
-export const getKnownRecipes = protectedProcedure.query(async ({ ctx }) => {
-  const userId = ctx.userId;
-  const [recipes] = await pool.query(
-    `SELECT r.idrecipe
-    FROM ratings r
-    WHERE r.userId = ? AND r.mark >= 4
-    UNION
-    SELECT cb.idrecipe
-    FROM cook_book c
-    JOIN cook_book_recipes cb ON c.id = cb.cook_book_id
-    WHERE c.userId = ?
-    UNION
-    SELECT r.idrecipe
-    FROM recipes r
-    WHERE r.userId = ? 
-    `,
-    [userId, userId, userId],
-  );
-  return recipes;
-});
-
 export const getRecomendetByMeta = protectedProcedure
+  .input(
+    z.object({
+      recipes: z.array(z.number()),
+      category: z.array(z.number()),
+      cuisine: z.array(z.number()),
+      typeCooking: z.array(z.number()),
+    }),
+  )
+  .query(async ({ input }) => {
+    const [likedMeta] = await pool.query(
+      `SELECT r.idrecipe
+    FROM recipes r
+    WHERE r.idrecipe NOT IN (?)
+    AND    r.category_id IN (?)
+    AND r.cuisine_id IN (?)
+    AND r.typeCooking_id IN (?)
+  `,
+      [input.recipes, input.category, input.cuisine, input.typeCooking],
+    );
+    return likedMeta;
+  });
+export const getRecipesByMenu = protectedProcedure
   .input(
     z.object({
       recipes: z.array(z.number()),

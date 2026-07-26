@@ -1,7 +1,6 @@
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { trpc } from "../lib/trpc";
-import { Sidebar } from "../components/Sidebar";
 import type {
   ReactElement,
   JSXElementConstructor,
@@ -54,8 +53,7 @@ export const ListOfUsers = () => {
   return (
     <>
       <Header />
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Sidebar />
+      <div>
         <div className="container" style={{ flex: 1 }}>
           <h1>Список пользователей</h1>
           <div className="search-box">

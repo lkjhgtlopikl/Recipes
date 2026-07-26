@@ -18,9 +18,9 @@ export const pool = mysql.createPool({
 export const checkConnection = async () => {
   try {
     const connection = await pool.getConnection();
-    await connection.ping(); // Sends a ping to the database to check if the connection is alive
+    await connection.ping();
     console.log("Database connection successful!");
-    connection.release(); // Release the connection back to the pool
+    connection.release();
   } catch (error) {
     console.error("Database connection failed:", error);
   }

@@ -197,7 +197,7 @@ a:hover {
 .recipe-meta {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 4px;
     margin: 12px 0;
     font-size: 0.85rem;
     color: #5c6b5e;
@@ -216,6 +216,11 @@ form {
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     margin: 20px 0;
     border: 1px solid #e5f0e1;
+}
+.form{
+    padding: 0;
+    margin: 5px;
+    border: none;
 }
 form div {
     margin-bottom: 16px;
@@ -535,6 +540,12 @@ textarea {
 }
 
 /* Адаптация для мобильных */
+
+@media (max-width: 1500px) {
+    .recipe-meta {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;

@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { trpc } from "../lib/trpc";
-import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { useState, useEffect } from "react";
@@ -10,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import { TextArea } from "./TextArea";
 import { useFormik } from "formik";
 import { Load } from "./Load";
+import { Input } from "./Input";
 
 export const Recipe = () => {
   const [selectedMark, setSelectedMark] = useState<number>(0);
@@ -167,6 +167,37 @@ export const Recipe = () => {
     }
   };
 
+  const addCookBookMutation = trpc.addCookBook.useMutation();
+  useEffect(() => {
+    if (addCookBookMutation.isSuccess) {
+      utils.getCookBooks.invalidate({ id: user?.id });
+      formik.resetForm();
+      setState(false);
+      window.location.href = `/recipes/${idrecipe}`;
+    }
+  }, [addCookBookMutation.isSuccess]);
+  const formikBook = useFormik({
+    initialValues: {
+      title: "",
+    },
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+      if (!values.title) errors.title = "Введите название кулинарной книги";
+      return errors;
+    },
+    onSubmit: async (values) => {
+      const payload = {
+        title: values.title,
+      };
+      try {
+        await addCookBookMutation.mutateAsync(payload);
+      } catch (error) {
+        console.error("Ошибка добавления кулинарной книги:", error);
+        alert(error instanceof Error ? error.message : "Ошибка сохранения");
+      }
+    },
+  });
+
   if (isLoading) return <Load />;
   if (authLoading) {
     return <Load />;
@@ -175,7 +206,7 @@ export const Recipe = () => {
   const recipe = data[0] ?? {
     id: "",
     title: "",
-    image: "",
+    img_url: "",
     userId: "",
     author: "",
     cuisine: "",
@@ -186,17 +217,13 @@ export const Recipe = () => {
     difficulty: "",
     description: "",
   };
-  console.log(recipe);
   const steps = dataSteps ?? [
     { id: "", text: "", idRecipe: "", number: "", image: "" },
   ];
   const Comments = dataComments ?? [];
   const ing = dataIngredients ?? [{}];
-  const rating = dataRatings[0] ?? {};
-
-  // let isMarked = rating.users.includes(user?.id) ? true : false;
+  const rating = dataRatings[0] ?? { mark: 0, count: 0 };
   let isMarked = Array.isArray(rating.users) && rating.users.includes(user?.id);
-
   let calories = 0;
   let protein = 0;
   let fat = 0;
@@ -218,18 +245,16 @@ export const Recipe = () => {
   return (
     <>
       <Header />
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Sidebar />
+      <div>
         <div className="container" style={{ flex: 1 }}>
           <div className="recipe-detail">
             <h1>{recipe.title}</h1>
             <div className="recipe-image">
-              <img src={recipe.image} />
+              <img src={recipe.img_url} />
             </div>
             <div className="meta">
               <a href={`/users/${recipe.userId}`}>{recipe.author}</a>
             </div>
-
             <div className="recipe-meta">
               <Meta name={"Оценка"} value={rating.mark} />
               <Meta name={"Число оценок"} value={rating.count} />
@@ -258,7 +283,6 @@ export const Recipe = () => {
                 />
               ))}
             </div>
-
             <div className="description">
               <h3>Описание</h3>
               <p>{recipe.description}</p>
@@ -349,6 +373,65 @@ export const Recipe = () => {
                     >
                       Добавить в кулинарную книгу
                     </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                    >
+                      Создать новую кулинаркную книгу
+                    </button>
+                  </div>
+                  <div
+                    className="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div className="modal-dialog">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h1
+                            className="modal-title fs-5"
+                            id="exampleModalLabel"
+                          >
+                            Создать новую кулинарную книгу
+                          </h1>
+                          <button
+                            type="button"
+                            className="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          />
+                        </div>
+                        <div className="modal-body">
+                          <form
+                            className="form"
+                            onSubmit={formikBook.handleSubmit}
+                          >
+                            <Input
+                              name="title"
+                              type="text"
+                              label=""
+                              placeholder="Введите название кулинарной книги"
+                              formik={formikBook}
+                            />
+                            <button
+                              type="submit"
+                              disabled={
+                                formikBook.isSubmitting ||
+                                addCookBookMutation.isPending
+                              }
+                              className="btn btn-primary"
+                            >
+                              Добавить
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -423,7 +506,6 @@ export const Recipe = () => {
           )}
         </div>
       </div>
-
       <Footer />
     </>
   );

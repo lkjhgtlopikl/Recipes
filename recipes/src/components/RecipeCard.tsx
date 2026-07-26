@@ -5,7 +5,7 @@ import { Meta } from "./Meta";
 interface RecipeCardProps {
   id: number;
   title: string;
-  image: string;
+  img_url: string;
   userId: number;
   author: string;
   cuisine: string;
@@ -28,7 +28,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
     { id: props.id! },
     { enabled: !!props.id },
   );
-  const rating = dataRatings?.[0]?.mark;
+  const rating = dataRatings?.[0]?.mark ?? 0;
   const handleDelete = async () => {
     if (!window.confirm("Вы уверены, что хотите удалить рецепт?")) return;
 
@@ -47,7 +47,7 @@ export const RecipeCard = (props: RecipeCardProps) => {
         <h3>{props.title}</h3>
         <a href={`/users/${props.userId}`}>{props.author}</a>
         <div className="recipe-image">
-          <img src={props.image} />
+          <img src={props.img_url} />
         </div>
         <p className="description">{props.description}</p>
         <div className="recipe-meta">

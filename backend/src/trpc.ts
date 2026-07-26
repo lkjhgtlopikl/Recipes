@@ -2,7 +2,6 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { verifyToken } from "./lib/jwt";
 import type { Request, Response } from "express";
 
-// Тип контекста: будем хранить userId, если токен передан
 export interface Context {
   userId: number | null;
   req: Request;

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken, JwtPayload } from "../lib/auth";
 
-// Расширяем тип Request, добавляя user
 declare global {
   namespace Express {
     interface Request {
@@ -25,7 +24,7 @@ export function authMiddleware(
   try {
     req.user = verifyToken(token);
   } catch (err) {
-    req.user = null; // токен недействителен – считаем гостем
+    req.user = null;
   }
   next();
 }

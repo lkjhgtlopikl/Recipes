@@ -2,7 +2,6 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { trpc } from "../lib/trpc"; // TrpcProvider больше не импортируем
 import { RecipeCard } from "../components/RecipeCard";
-import { Sidebar } from "../components/Sidebar";
 import { Load } from "../components/Load";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
@@ -35,18 +34,14 @@ export const ListOfRecipes = (prop) => {
   const allRecipes = trpc.getRecepies.useQuery(undefined, {
     enabled: !hasFilters, // если фильтров нет, берём все рецепты
   });
-
   const recepies = hasFilters ? data : allRecipes.data;
-  console.log(recepies);
-
   if (isLoading || allRecipes.isLoading) return <Load />;
   if (error || allRecipes.error) return <Err />;
 
   return (
     <>
       <Header />
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Sidebar />
+      <div>
         <div className="container" style={{ flex: 1 }}>
           <h1>Все рецепты</h1>
           {user ? (
@@ -62,38 +57,23 @@ export const ListOfRecipes = (prop) => {
             </div>
           ) : (
             <div className="recipes-grid">
-              {recepies.map(
-                (recipe: {
-                  id: number;
-                  image: string;
-                  title: string;
-                  userId: number;
-                  author: string;
-                  cuisine: string;
-                  typeCooking: string;
-                  category: string;
-                  cookingTime: string;
-                  servings: string;
-                  difficulty: string;
-                  description: string;
-                }) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    userId={recipe.userId}
-                    id={recipe.id}
-                    image={recipe.image}
-                    title={recipe.title}
-                    author={recipe.author}
-                    cuisine={recipe.cuisine}
-                    typeCooking={recipe.typeCooking}
-                    category={recipe.category}
-                    cookingTime={recipe.cookingTime}
-                    servings={recipe.servings}
-                    difficulty={recipe.difficulty}
-                    description={recipe.description}
-                  ></RecipeCard>
-                ),
-              )}
+              {recepies.map((recipe) => (
+                <RecipeCard
+                  key={recipe.idrecipe}
+                  userId={recipe.userId}
+                  id={recipe.idrecipe}
+                  img_url={recipe.img_url}
+                  title={recipe.title}
+                  author={recipe.author}
+                  cuisine={recipe.cuisine}
+                  typeCooking={recipe.typeCooking}
+                  category={recipe.category}
+                  cookingTime={recipe.cookingTime}
+                  servings={recipe.servings}
+                  difficulty={recipe.difficulty}
+                  description={recipe.description}
+                />
+              ))}
             </div>
           )}
         </div>

@@ -2,15 +2,10 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { trpc } from "../lib/trpc"; // TrpcProvider больше не импортируем
 import { RecipeCard } from "../components/RecipeCard";
-import { Sidebar } from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Load } from "../components/Load";
 import { Err } from "../components/Err";
-// interface CookBook {
-//   title: string;
-//   recepies: string[];
-// }
 export const CookBook = () => {
   const { user } = useAuth();
   const { bookId } = useParams<{ bookId: string }>();
@@ -54,8 +49,7 @@ export const CookBook = () => {
     <>
       <Header />
 
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Sidebar />
+      <div>
         <div className="container" style={{ flex: 1 }}>
           <h1>{book.title}</h1>
           <div className="search-box">
@@ -79,7 +73,7 @@ export const CookBook = () => {
                 <div>
                   <RecipeCard
                     id={recipe.id}
-                    image={recipe.image}
+                    img_url={recipe.img_url}
                     title={recipe.title}
                     author={recipe.author}
                     cuisine={recipe.cuisine}
@@ -90,7 +84,7 @@ export const CookBook = () => {
                     difficulty={recipe.difficulty}
                     description={recipe.description}
                     userId={recipe.userId}
-                  ></RecipeCard>
+                  />
                   {user?.id == book.userId ? (
                     <button
                       type="button"
